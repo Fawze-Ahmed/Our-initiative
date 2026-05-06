@@ -1,0 +1,17 @@
+{
+  "name": "our-initiative",
+  "version": "1.0.0",
+  "description": "مبادرتنا - Our Initiative",
+  "scripts": {
+    "build": "echo 'Building static files...'",
+    "start": "python -m http.server 3000"
+  },
+  "keywords": [
+    "initiative",
+    "students",
+    "activities",
+    "volunteering"
+  ],
+  "author": "Fawze Ahmed",
+  "license": "MIT"
+}
