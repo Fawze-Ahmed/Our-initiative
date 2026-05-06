@@ -1,0 +1,61 @@
+# Composer
+composer.phar
+vendor/
+composer.lock
+
+# PHP
+.env
+.env.local
+.env.*.local
+*.log
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.c9/
+*.sublime-workspace
+.sublime-project
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# Uploads & Temporary
+uploads/*
+!uploads/.gitkeep
+temp/
+tmp/
+cache/
+
+# Node modules (إذا كنت تستخدم npm)
+node_modules/
+npm-debug.log
+package-lock.json
+
+# Build files
+dist/
+build/
+
+# Database
+*.sql~
+backup/
+
+# IDE Settings
+.editorconfig
+.vscode/settings.json
+.phpstorm.meta.php
+.idea/
+
+# Project specific
+.hintrc
