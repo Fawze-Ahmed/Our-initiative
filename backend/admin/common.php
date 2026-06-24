@@ -134,7 +134,13 @@ function saveUploadedImage(string $fieldName): ?string
         throw new RuntimeException('نوع الصورة غير مدعوم');
     }
 
-    $uploadDir = realpath(__DIR__ . '/../uploads');
+    $uploadDirPath = __DIR__ . '/../uploads';
+
+    if (!is_dir($uploadDirPath) && !mkdir($uploadDirPath, 0755, true) && !is_dir($uploadDirPath)) {
+        throw new RuntimeException('تعذر إنشاء مجلد رفع الصور');
+    }
+
+    $uploadDir = realpath($uploadDirPath);
 
     if ($uploadDir === false) {
         throw new RuntimeException('مجلد الرفع غير موجود');

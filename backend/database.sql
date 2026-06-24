@@ -103,7 +103,11 @@ CREATE TABLE IF NOT EXISTS activity_reports (
 INSERT INTO users (full_name, email, password_hash, role, phone, college, is_active)
 VALUES
 ('Admin User', 'admin@initiative.com', 'admin123', 'admin', '01000000000', 'إدارة النظام', 1)
-ON DUPLICATE KEY UPDATE email = VALUES(email);
+ON DUPLICATE KEY UPDATE
+    full_name = VALUES(full_name),
+    password_hash = VALUES(password_hash),
+    role = VALUES(role),
+    is_active = VALUES(is_active);
 
 INSERT INTO activities (title, slug, short_description, full_description, image, icon, color, category, location, starts_at, ends_at, max_participants, is_featured, is_active, created_by)
 VALUES

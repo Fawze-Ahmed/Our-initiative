@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                  SET title = :title, slug = :slug, short_description = :short_description, full_description = :full_description,
                      image = :image, icon = :icon, color = :color, category = :category, location = :location,
                      starts_at = :starts_at, ends_at = :ends_at, max_participants = :max_participants,
-                     is_featured = :is_featured, is_active = :is_active, updated_at = NOW()
+                     is_featured = :is_featured, is_active = :is_active, updated_at = CURRENT_TIMESTAMP
                  WHERE id = :id'
             );
             $statement->execute($data + ['id' => (int) $_POST['activity_id']]);
@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'INSERT INTO activities
              (title, slug, short_description, full_description, image, icon, color, category, location, starts_at, ends_at, max_participants, is_featured, is_active, created_by, created_at, updated_at)
              VALUES
-             (:title, :slug, :short_description, :full_description, :image, :icon, :color, :category, :location, :starts_at, :ends_at, :max_participants, :is_featured, :is_active, 1, NOW(), NOW())'
+             (:title, :slug, :short_description, :full_description, :image, :icon, :color, :category, :location, :starts_at, :ends_at, :max_participants, :is_featured, :is_active, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)'
         );
         $statement->execute($data);
         redirectWithMessage('activities.php', 'تم إنشاء النشاط');

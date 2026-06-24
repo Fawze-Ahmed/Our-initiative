@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $statement = db()->prepare(
             'INSERT INTO gallery_items (activity_id, title, image_path, report_excerpt, captured_at, created_at, updated_at)
-             VALUES (:activity_id, :title, :image_path, :report_excerpt, :captured_at, NOW(), NOW())'
+             VALUES (:activity_id, :title, :image_path, :report_excerpt, :captured_at, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)'
         );
         $statement->execute([
             'activity_id' => $_POST['activity_id'] !== '' ? (int) $_POST['activity_id'] : null,

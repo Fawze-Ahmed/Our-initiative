@@ -12,18 +12,37 @@ function db(): PDO
         return $pdo;
     }
 
-    $host = envValue('DB_HOST', '127.0.0.1');
-    $port = envValue('DB_PORT', '3306');
-    $database = envValue('DB_DATABASE', 'student_initiatives');
-    $username = envValue('DB_USERNAME', 'root');
-    $password = envValue('DB_PASSWORD', '');
+    // اختيار نوع قاعدة البيانات
+    $driver = strtolower((string) envValue('DB_DRIVER', envValue('MYSQLHOST') ? 'mysql' : 'sqlite')); // sqlite أو mysql
 
-    $dsn = "mysql:host={$host};port={$port};dbname={$database};charset=utf8mb4";
+    if ($driver === 'mysql') {
+        // MySQL للإنتاج
+        $host = envValue('DB_HOST', envValue('MYSQLHOST', '127.0.0.1'));
+        $port = envValue('DB_PORT', envValue('MYSQLPORT', '3306'));
+        $database = envValue('DB_DATABASE', envValue('MYSQLDATABASE', 'student_initiatives'));
+        $username = envValue('DB_USERNAME', envValue('MYSQLUSER', 'root'));
+        $password = envValue('DB_PASSWORD', envValue('MYSQLPASSWORD', ''));
 
-    $pdo = new PDO($dsn, $username, $password, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    ]);
+        $dsn = "mysql:host={$host};port={$port};dbname={$database};charset=utf8mb4";
+        $pdo = new PDO($dsn, $username, $password);
+    } else {
+        // SQLite للتطوير المحلي
+        $dbPath = __DIR__ . '/data/student_initiatives.db';
+
+        // إنشاء مجلد البيانات إذا لم يكن موجوداً
+        if (!is_dir(dirname($dbPath))) {
+            mkdir(dirname($dbPath), 0755, true);
+        }
+
+        $dsn = "sqlite:{$dbPath}";
+        $pdo = new PDO($dsn);
+
+        // تفعيل Foreign Keys في SQLite
+        $pdo->exec('PRAGMA foreign_keys = ON');
+    }
+
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
     return $pdo;
 }

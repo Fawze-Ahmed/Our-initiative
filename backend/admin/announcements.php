@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!empty($_POST['announcement_id'])) {
             $statement = db()->prepare(
                 'UPDATE announcements
-                 SET title = :title, content = :content, published_at = :published_at, is_important = :is_important, updated_at = NOW()
+                 SET title = :title, content = :content, published_at = :published_at, is_important = :is_important, updated_at = CURRENT_TIMESTAMP
                  WHERE id = :id'
             );
             $statement->execute($data + ['id' => (int) $_POST['announcement_id']]);
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $statement = db()->prepare(
             'INSERT INTO announcements (title, content, published_at, is_important, created_by, created_at, updated_at)
-             VALUES (:title, :content, :published_at, :is_important, 1, NOW(), NOW())'
+             VALUES (:title, :content, :published_at, :is_important, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)'
         );
         $statement->execute($data);
         redirectWithMessage('announcements.php', 'تم إنشاء الإعلان');

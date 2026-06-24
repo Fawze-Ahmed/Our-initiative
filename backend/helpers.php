@@ -13,7 +13,15 @@ function sendJson(array $payload, int $status = 200): never
 {
     http_response_code($status);
     header('Content-Type: application/json; charset=utf-8');
-    header('Access-Control-Allow-Origin: *');
+    $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+    $frontendUrl = function_exists('envValue') ? envValue('FRONTEND_URL', '') : '';
+    $allowedOrigin = $frontendUrl !== '' ? $frontendUrl : ($origin !== '' ? $origin : '*');
+
+    header('Access-Control-Allow-Origin: ' . $allowedOrigin);
+    if ($allowedOrigin !== '*') {
+        header('Access-Control-Allow-Credentials: true');
+        header('Vary: Origin');
+    }
     header('Access-Control-Allow-Headers: Content-Type');
     header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 

@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new RuntimeException('بيانات غير صحيحة');
         }
 
-        $statement = db()->prepare('UPDATE volunteer_applications SET status = :status, updated_at = NOW() WHERE id = :id');
+        $statement = db()->prepare('UPDATE volunteer_applications SET status = :status, updated_at = CURRENT_TIMESTAMP WHERE id = :id');
         $statement->execute(['status' => $status, 'id' => $applicationId]);
 
         $info = db()->prepare('SELECT full_name FROM volunteer_applications WHERE id = :id');
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $notification = db()->prepare(
             'INSERT INTO notifications (user_id, title, body, type, is_read, created_at, updated_at)
-             VALUES (NULL, :title, :body, :type, 0, NOW(), NOW())'
+             VALUES (NULL, :title, :body, :type, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)'
         );
         $notification->execute([
             'title' => 'تغيير حالة طلب',

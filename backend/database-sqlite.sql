@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS activity_reports (
 -- ===== بيانات تجريبية =====
 -- إدراج مستخدم إداري
 INSERT OR IGNORE INTO users (full_name, email, password_hash, role, college, phone) VALUES
-('المدير العام', 'admin@initiative.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', 'جامعة التقنية', '+966501234567');
+('المدير العام', 'admin@initiative.com', 'admin123', 'admin', 'إدارة النظام', '01000000000');
 
 -- إدراج أنشطة تجريبية
 INSERT OR IGNORE INTO activities (title, slug, short_description, full_description, image, icon, color, category, location, max_participants, is_featured, is_active) VALUES

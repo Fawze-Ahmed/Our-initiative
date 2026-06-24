@@ -15,8 +15,9 @@ if (currentUser() && (currentUser()['role'] ?? '') === 'admin') {
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = trim((string) ($_POST['email'] ?? ''));
+    $username = trim((string) ($_POST['username'] ?? ''));
     $password = (string) ($_POST['password'] ?? '');
+    $email = $username === 'admin' ? 'admin@initiative.com' : $username;
 
     $statement = db()->prepare('SELECT id, full_name, email, password_hash, role, is_active FROM users WHERE email = :email LIMIT 1');
     $statement->execute(['email' => $email]);
@@ -60,13 +61,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="error"><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></div>
         <?php endif; ?>
         <form method="post">
-            <label>البريد الإلكتروني</label>
-            <input type="email" name="email" required>
+            <label>اسم المستخدم</label>
+            <input type="text" name="username" required autocomplete="username">
             <label>كلمة المرور</label>
-            <input type="password" name="password" required>
+            <input type="password" name="password" required autocomplete="current-password">
             <button type="submit">دخول</button>
         </form>
-        <div class="hint">الحساب الافتراضي موجود داخل ملف قاعدة البيانات.</div>
+        <div class="hint">Username: admin / Password: admin123</div>
     </div>
 </body>
 </html>

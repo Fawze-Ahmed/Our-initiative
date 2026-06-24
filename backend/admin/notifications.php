@@ -10,7 +10,7 @@ $error = $_GET['error'] ?? null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         if (isset($_POST['notification_id'])) {
-            $statement = db()->prepare('UPDATE notifications SET is_read = 1, updated_at = NOW() WHERE id = :id');
+            $statement = db()->prepare('UPDATE notifications SET is_read = 1, updated_at = CURRENT_TIMESTAMP WHERE id = :id');
             $statement->execute(['id' => (int) $_POST['notification_id']]);
             redirectWithMessage('notifications.php', 'تم تعليم الإشعار كمقروء');
         }
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $statement = db()->prepare(
                 'INSERT INTO notifications (user_id, title, body, type, is_read, created_at, updated_at)
-                 VALUES (NULL, :title, :body, :type, 0, NOW(), NOW())'
+                 VALUES (NULL, :title, :body, :type, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)'
             );
             $statement->execute([
                 'title' => $title,

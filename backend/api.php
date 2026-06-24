@@ -44,7 +44,8 @@ try {
              WHERE email = :email
              LIMIT 1'
         );
-        $statement->execute(['email' => trim((string) $data['email'])]);
+        $identifier = trim((string) $data['email']);
+        $statement->execute(['email' => $identifier === 'admin' ? 'admin@initiative.com' : $identifier]);
         $user = $statement->fetch();
 
         if (!$user || !(bool) $user['is_active'] || !passwordMatches((string) $data['password'], (string) $user['password_hash'])) {
@@ -163,7 +164,7 @@ try {
 
         $statement = db()->prepare(
             'INSERT INTO volunteer_applications (activity_id, full_name, email, college, phone, message, status, created_at, updated_at)
-             VALUES (:activity_id, :full_name, :email, :college, :phone, :message, :status, NOW(), NOW())'
+             VALUES (:activity_id, :full_name, :email, :college, :phone, :message, :status, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)'
         );
         $statement->execute([
             'activity_id' => jsonInputValue($data, 'activity_id'),
@@ -215,7 +216,7 @@ try {
             sendJson(['message' => 'حالة الطلب غير صحيحة'], 422);
         }
 
-        $statement = db()->prepare('UPDATE volunteer_applications SET status = :status, updated_at = NOW() WHERE id = :id');
+        $statement = db()->prepare('UPDATE volunteer_applications SET status = :status, updated_at = CURRENT_TIMESTAMP WHERE id = :id');
         $statement->execute(['status' => $status, 'id' => $applicationId]);
 
         $appStatement = db()->prepare('SELECT full_name FROM volunteer_applications WHERE id = :id LIMIT 1');
@@ -224,7 +225,7 @@ try {
 
         $notificationStatement = db()->prepare(
             'INSERT INTO notifications (user_id, title, body, type, is_read, created_at, updated_at)
-             VALUES (NULL, :title, :body, :type, 0, NOW(), NOW())'
+             VALUES (NULL, :title, :body, :type, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)'
         );
         $notificationStatement->execute([
             'title' => 'تحديث حالة طلب انضمام',
@@ -251,7 +252,7 @@ try {
 
         $statement = db()->prepare(
             'INSERT INTO announcements (title, content, published_at, is_important, created_at, updated_at)
-             VALUES (:title, :content, :published_at, :is_important, NOW(), NOW())'
+             VALUES (:title, :content, :published_at, :is_important, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)'
         );
         $statement->execute([
             'title' => trim((string) $data['title']),
@@ -275,7 +276,7 @@ try {
 
         $statement = db()->prepare(
             'UPDATE announcements
-             SET title = :title, content = :content, published_at = :published_at, is_important = :is_important, updated_at = NOW()
+             SET title = :title, content = :content, published_at = :published_at, is_important = :is_important, updated_at = CURRENT_TIMESTAMP
              WHERE id = :id'
         );
         $statement->execute([
@@ -329,7 +330,7 @@ try {
 
         $statement = db()->prepare(
             'INSERT INTO gallery_items (activity_id, title, image_path, report_excerpt, captured_at, created_at, updated_at)
-             VALUES (:activity_id, :title, :image_path, :report_excerpt, :captured_at, NOW(), NOW())'
+             VALUES (:activity_id, :title, :image_path, :report_excerpt, :captured_at, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)'
         );
         $statement->execute([
             'activity_id' => jsonInputValue($data, 'activity_id'),
@@ -348,7 +349,7 @@ try {
     }
 
     if (($method === 'PUT' || $method === 'POST') && preg_match('#^/notifications/([0-9]+)/read$#', $path, $matches) === 1) {
-        $statement = db()->prepare('UPDATE notifications SET is_read = 1, updated_at = NOW() WHERE id = :id');
+        $statement = db()->prepare('UPDATE notifications SET is_read = 1, updated_at = CURRENT_TIMESTAMP WHERE id = :id');
         $statement->execute(['id' => (int) $matches[1]]);
         sendJson(['message' => 'تم تحديث الإشعار']);
     }
@@ -375,7 +376,7 @@ try {
 
         $statement = db()->prepare(
             'INSERT INTO activity_reports (activity_id, title, summary, participants_count, report_date, created_at, updated_at)
-             VALUES (:activity_id, :title, :summary, :participants_count, :report_date, NOW(), NOW())'
+             VALUES (:activity_id, :title, :summary, :participants_count, :report_date, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)'
         );
         $statement->execute([
             'activity_id' => (int) $data['activity_id'],
@@ -411,7 +412,7 @@ try {
             'INSERT INTO activities
              (title, slug, short_description, full_description, image, icon, color, category, location, starts_at, ends_at, max_participants, is_featured, is_active, created_at, updated_at)
              VALUES
-             (:title, :slug, :short_description, :full_description, :image, :icon, :color, :category, :location, :starts_at, :ends_at, :max_participants, :is_featured, :is_active, NOW(), NOW())'
+             (:title, :slug, :short_description, :full_description, :image, :icon, :color, :category, :location, :starts_at, :ends_at, :max_participants, :is_featured, :is_active, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)'
         );
         $statement->execute([
             'title' => trim((string) $data['title']),
@@ -448,7 +449,7 @@ try {
              SET title = :title, slug = :slug, short_description = :short_description, full_description = :full_description,
                  image = :image, icon = :icon, color = :color, category = :category, location = :location,
                  starts_at = :starts_at, ends_at = :ends_at, max_participants = :max_participants,
-                 is_featured = :is_featured, is_active = :is_active, updated_at = NOW()
+                 is_featured = :is_featured, is_active = :is_active, updated_at = CURRENT_TIMESTAMP
              WHERE id = :id'
         );
         $statement->execute([

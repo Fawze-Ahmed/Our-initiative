@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $statement = db()->prepare(
             'INSERT INTO activity_reports (activity_id, title, summary, participants_count, report_date, created_by, created_at, updated_at)
-             VALUES (:activity_id, :title, :summary, :participants_count, :report_date, 1, NOW(), NOW())'
+             VALUES (:activity_id, :title, :summary, :participants_count, :report_date, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)'
         );
         $statement->execute($data);
         redirectWithMessage('reports.php', 'تم حفظ التقرير');
